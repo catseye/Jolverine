@@ -8,9 +8,9 @@ genre of turning tarpit by adding the feature of modifying the instruction
 wheel during execution.  It is not dissimilar to Wunnel, and was influenced
 slightly by Half-Broken Car in Heavy Traffic.
 
-The name is either a portmanteau of "jolly wolverine" (where "jolly" is a
-euphemism for "drunk",) which is an attempt to capture, in a noun phrase, the
-language's vicious, erratic nature.
+The name is a portmanteau of "jolly wolverine" (where "jolly" is a euphemism
+for "drunk",) which is an attempt to capture, in a noun phrase, the language's
+vicious, erratic nature.
 
 Program Structure
 -----------------
@@ -107,7 +107,7 @@ number of instructions on the wheel) and a couple of other numbers (the
 amount you can change the x and y positions on each spin around the
 playfield.)
 
-Happy wheel-mangling! 
-Chris Pressey 
-September 11, 2012 
+Happy wheel-mangling!  
+Chris Pressey  
+September 11, 2012  
 Montréal, Québec
