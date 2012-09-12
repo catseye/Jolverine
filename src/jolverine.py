@@ -1,5 +1,7 @@
+#!/usr/bin/env python
+
 # Reference interpreter for Jolverine 1.0
-# Sept 12, 2012, Chris Pressey, Cat's Eye Technologies
+# Sept 11, 2012, Chris Pressey, Cat's Eye Technologies
 # This program is in the public domain -- see the file UNLICENSE.
 
 import sys
