@@ -7,7 +7,7 @@
 import sys
 
 class Program(object):
-    def __init__(self, program, debug=False):
+    def __init__(self, program, debug=False, super_wimp_mode=False):
         self.wheel = [
             'left',
             'right',
@@ -23,6 +23,7 @@ class Program(object):
         self.playfield = {}
         self.insertpos = 'bottom'
         self._debug = debug
+        self._super_wimp_mode = super_wimp_mode
         y = 0
         self.maxx = 0
         for line in file:
@@ -113,17 +114,41 @@ class Program(object):
             self.insertpos = 'bottom'
 
     def run(self):
-        while True:
-            instr = self.playfield.get((self.x, self.y), ' ')
-            if instr == '*':
-                self.execute()
-            self.cycle()
-            self.x += self.dx
-            self.y += self.dy
-            self.dump()
-            if (self.x < 0 or self.y < 0 or
-                self.x > self.maxx or self.y > self.maxy):
-                break
+        if not self._super_wimp_mode:
+            while True:
+                instr = self.playfield.get((self.x, self.y), ' ')
+                if instr == '*':
+                    self.execute()
+                self.cycle()
+                self.x += self.dx
+                self.y += self.dy
+                self.dump()
+                if (self.x < 0 or self.y < 0 or
+                    self.x > self.maxx or self.y > self.maxy):
+                    break
+        else:
+            table = {
+              '<': 'left',
+              '>': 'right',
+              '+': 'rot',
+              'x': 'adddx',
+              'y': 'adddy',
+              'i': 'input',
+              'o': 'output',
+            }
+            while True:
+                instr = self.playfield.get((self.x, self.y), ' ')
+                name = table.get(instr, None)
+                if name is not None:
+                    self.debug("*                    WIMPZECUTING %s @ (%d,%d)" % (name, self.x, self.y))
+                    command = getattr(self, name)
+                    command()
+                self.x += self.dx
+                self.y += self.dy
+                self.dump()
+                if (self.x < 0 or self.y < 0 or
+                    self.x > self.maxx or self.y > self.maxy):
+                    break
 
     ### debugging ###
     
@@ -133,16 +158,17 @@ class Program(object):
         print "------------"
         print "x=%d,y=%d,dx=%d,dy=%d" % (self.x, self.y, self.dx, self.dy)
         print "head: %d cell: %d" % (self.head, self.tape.get(self.head, 0))
-        print "Next reinsert: %s" % self.insertpos
-        print "Wheel:"
-        print "------------"
-        i = 0
-        for x in self.wheel:
-            arrow = "   "
-            if i == self.index:
-                arrow = "-->"
-            print "%s %d. %s" % (arrow, i, x)
-            i += 1
+        if not self._super_wimp_mode:
+            print "Next reinsert: %s" % self.insertpos
+            print "Wheel:"
+            print "------------"
+            i = 0
+            for x in self.wheel:
+                arrow = "   "
+                if i == self.index:
+                    arrow = "-->"
+                print "%s %d. %s" % (arrow, i, x)
+                i += 1
         print "------------"
 
 
@@ -152,11 +178,14 @@ class Program(object):
 
 if __name__ == '__main__':
     debug = False
-    fnai = 1
-    if sys.argv[1] == '-d':
+    super_wimp_mode = False
+    if sys.argv[1] in ('-d', '--debug'):
         debug = True
-        fnai = 2
-    with open(sys.argv[fnai]) as file:
-        p = Program(file, debug=debug)
+        sys.argv.pop(1)
+    if sys.argv[1] == '--super-wimp-mode':
+        super_wimp_mode = True
+        sys.argv.pop(1)
+    with open(sys.argv[1]) as file:
+        p = Program(file, debug=debug, super_wimp_mode=super_wimp_mode)
     p.dump()
     p.run()
