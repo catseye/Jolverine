@@ -6,6 +6,7 @@
 
 import sys
 
+
 class Program(object):
     def __init__(self, program, debug=False, super_wimp_mode=False):
         self.wheel = [
@@ -42,7 +43,7 @@ class Program(object):
         self.dy = 0
 
     ### helpers ###
-    
+
     def limit(self, x):
         if x == 2:
             return -1
@@ -51,7 +52,7 @@ class Program(object):
         return x
 
     ### instructions ###
-    
+
     def left(self):
         self.head -= 1
 
@@ -86,10 +87,10 @@ class Program(object):
     def output(self):
         val = self.tape.get(self.head, 0)
         if val == 1:
-            c = sys.stdout.write('1')
+            sys.stdout.write('1')
             sys.stdout.flush()
         elif val == 0:
-            c = sys.stdout.write('0')
+            sys.stdout.write('0')
             sys.stdout.flush()
         else:
             raise ValueError("Illegal binary output value '%d'" % val)
@@ -102,7 +103,9 @@ class Program(object):
 
     def execute(self):
         name = self.wheel[self.index]
-        self.debug("*                    EXECUTING %s @ (%d,%d)" % (name, self.x, self.y))
+        indent = ' ' * 20
+        self.debug("*%sEXECUTING %s @ (%d,%d)" %
+                   (indent, name, self.x, self.y))
         command = getattr(self, name)
         command()
         self.wheel.pop(self.index)
@@ -140,7 +143,9 @@ class Program(object):
                 instr = self.playfield.get((self.x, self.y), ' ')
                 name = table.get(instr, None)
                 if name is not None:
-                    self.debug("*                    WIMPZECUTING %s @ (%d,%d)" % (name, self.x, self.y))
+                    indent = ' ' * 20
+                    self.debug("*%sWIMPZECUTING %s @ (%d,%d)" %
+                               (indent, name, self.x, self.y))
                     command = getattr(self, name)
                     command()
                 self.x += self.dx
@@ -151,7 +156,7 @@ class Program(object):
                     break
 
     ### debugging ###
-    
+
     def dump(self):
         if not self._debug:
             return
@@ -170,7 +175,6 @@ class Program(object):
                 print "%s %d. %s" % (arrow, i, x)
                 i += 1
         print "------------"
-
 
     def debug(self, msg):
         if self._debug:
