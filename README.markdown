@@ -38,8 +38,8 @@ Storage
 There is an unbounded tape, with a single head which can be moved left
 and right.  Each cell on the tape may contain one of the three values -1, 0,
 or 1.  Initially, all tape cells contain 0.  Addition and subtraction of these
-values is always "mod 3 - 1": incrementing 1 yields -1 and decrementing -1
-yields 1.
+values is modulo 3, with the result considered to be in the range {-1, 0, 1}.
+Incrementing 1 yields -1 and decrementing -1 yields 1.
 
 Instruction Wheel
 -----------------
@@ -84,28 +84,62 @@ It is entirely possible for `*` to execute `adddx` or `adddy` with the result
 of both dx and dy being zero.  In this case, execution does not halt, but
 the same `*` will be executed again, and again, until dx or dy changes.
 
+Jolverine is a reversible language, although that was not at all on the
+author's mind when it was created.
+
 Computational Class
 -------------------
 
-Jolverine may or may not be Turing-complete.  If it is not, it is not because
-it has insufficient storage, or no way to execute an instruction it has
-previously executed; it will be because there is no way to predictably
-execute the same series of instructions as was previously executed.
+Jolverine was shown to be Turing-complete by Ørjan Johansen, shortly after
+version 1.0 was released.  You can read the full details of the construction
+(which involves some rather large Jolverine programs) in the
+[Jolverine Turing-completeness proof][] article on the esolangs wiki.
+
+[Jolverine Turing-completeness proof]: http://esolangs.org/wiki/Jolverine_Turing-completeness_proof
 
 Discussion
 ----------
 
-I have yet to write a proper loop in Jolverine.  I have only attempted to
-write an infinite loop, executing `adddx` and `adddy` alternately after
-`rot`ing a cell on the tape.  After a few iterations, you can guarantee
-that `adddx` is at the top of the wheel, and `adddy` at the bottom, so you
-can choose to execute the next one, as appropriate, and it will not change
-the position of these instructions on the wheel (because they're already at
-the top and bottom.)  However, I suspect even this technique really requires
-some number theory to do effectively -- probably finding the LCM of 7 (the
-number of instructions on the wheel) and a couple of other numbers (the
-amount you can change the x and y positions on each spin around the
-playfield.)
+While I have yet to write a proper loop in Jolverine, others have succeeded
+at this.  Some programming techniques that may come in useful for writing
+Jolverine programs include:
+
+*   You can always add seven non-stars between a star and the next star to
+    be executed without changing the semantics of the second star.  (The
+    wheel just does a full rotation, ending up where it was originally.)
+*   If you execute the instruction at the top of the wheel, and it is an
+    odd-numbered execution step (e.g. the first instruction executed in
+    the program, or the third, etc.), the position of that instruction on
+    the wheel will not change (it will be removed, but then re-inserted
+    exactly where it was.)  The same goes for executing the instruction at
+    the bottom of the wheel on an even-numbered execution step.
+*   There are other techniques for executing an arbitrary instruction,
+    then getting the wheel back into the configuration it was in before
+    you started executing it; perhaps not surprisingly, these require
+    measures such as leaving every second cell of the tape free for
+    scratch space.  See the [Jolverine article][] on the esolangs wiki, and
+    its talk page, for more information.
+
+[Jolverine article]: http://esolangs.org/wiki/Jolverine
+
+About this Distribution
+-----------------------
+
+This is the reference distribution for Jolverine, and as such, it contains
+the reference implementation of Jolverine, written in Python, in the file
+`script/jolverine`.
+
+This implementation also handles a very simplistic variant of Jolverine
+which I call "Jolverine Super Wimp Mode".  This variant is not supposed to
+be a real language, so much as an aid to writing Jolverine programs -- you
+prototype them in Jolverine Super Wimp Mode first, then you figure out how to
+convert them to Jolverine.  In Jolverine Super Wimp Mode, there is no
+wheel at all, and the characters `<`, `>`, `+`, `x`, `y`, `i`, and `o`
+execute the seven above-listed instructions directly.
+
+There are some example program in the `eg` directory; those with the file
+extension `.jol` are in Jolverine, while those with the extension `.jolswm`
+are in Jolverine Super Wimp Mode.
 
 Happy wheel-mangling!  
 Chris Pressey  
