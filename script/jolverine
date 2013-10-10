@@ -7,8 +7,13 @@
 import sys
 
 
+# check if running under Skulpt, and if so, apply appropriate modifications
+if getattr(sys, 'resetTimeout', None) is not None:
+    __name__ = '__skulpt__'
+
+
 class Program(object):
-    def __init__(self, program, debug=False, super_wimp_mode=False):
+    def __init__(self, debug=False, super_wimp_mode=False):
         self.wheel = [
             'left',
             'right',
@@ -25,9 +30,16 @@ class Program(object):
         self.insertpos = 'bottom'
         self._debug = debug
         self._super_wimp_mode = super_wimp_mode
-        y = 0
         self.maxx = 0
-        for line in file:
+        self.maxy = 0
+        self.x = 0
+        self.y = 0
+        self.dx = 1
+        self.dy = 0
+
+    def load_string(self, text):
+        y = 0
+        for line in text.split('\n'):
             line = line.rstrip('\r\n')
             x = 0
             while x < len(line):
@@ -37,10 +49,9 @@ class Program(object):
                 self.maxx = x
             y += 1
         self.maxy = y
-        self.x = 0
-        self.y = 0
-        self.dx = 1
-        self.dy = 0
+
+    def load_file(self, filename):
+        self.load_string(open(filename, 'r').read())
 
     ### helpers ###
 
@@ -189,7 +200,7 @@ if __name__ == '__main__':
     if sys.argv[1] == '--super-wimp-mode':
         super_wimp_mode = True
         sys.argv.pop(1)
-    with open(sys.argv[1]) as file:
-        p = Program(file, debug=debug, super_wimp_mode=super_wimp_mode)
+    p = Program(debug=debug, super_wimp_mode=super_wimp_mode)
+    p.load_file(sys.argv[1])
     p.dump()
     p.run()
