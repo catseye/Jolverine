@@ -171,25 +171,25 @@ class Program(object):
     def dump(self):
         if not self._debug:
             return
-        print "------------"
-        print "x=%d,y=%d,dx=%d,dy=%d" % (self.x, self.y, self.dx, self.dy)
-        print "head: %d cell: %d" % (self.head, self.tape.get(self.head, 0))
+        print("------------")
+        print("x=%d,y=%d,dx=%d,dy=%d" % (self.x, self.y, self.dx, self.dy))
+        print("head: %d cell: %d" % (self.head, self.tape.get(self.head, 0)))
         if not self._super_wimp_mode:
-            print "Next reinsert: %s" % self.insertpos
-            print "Wheel:"
-            print "------------"
+            print("Next reinsert: %s" % self.insertpos)
+            print("Wheel:")
+            print("------------")
             i = 0
             for x in self.wheel:
                 arrow = "   "
                 if i == self.index:
                     arrow = "-->"
-                print "%s %d. %s" % (arrow, i, x)
+                print("%s %d. %s" % (arrow, i, x))
                 i += 1
-        print "------------"
+        print("------------")
 
     def debug(self, msg):
         if self._debug:
-            print msg
+            print(msg)
 
 if __name__ == '__main__':
     debug = False
