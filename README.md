@@ -2,6 +2,11 @@ Jolverine
 =========
 
 Language version 1.0
+| _Entry_ [@ catseye.tc](https://catseye.tc/node/Jolverine)
+| _Wiki entry_ [@ esolangs.org](https://esolangs.org/wiki/Jolverine)
+| _See also:_ [Wunnel](https://github.com/catseye/Wunnel#readme)
+
+- - - -
 
 The Jolverine language was devised as a conscious attempt to expand the
 genre of turning tarpit by adding the feature of modifying the instruction
